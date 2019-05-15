@@ -117,6 +117,132 @@ def selectionscreen():
         stockmaintenance()
     def createbills():
         root2.destroy()
+import pymongo
+from pymongo import MongoClient
+from tkinter import *
+import time;
+import datetime
+import random
+
+from tkinter import messagebox
+client = MongoClient()
+db = client.renin
+#-------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+log = ' '
+cost1 = 0
+total1 = 0
+Billno = ' '
+def loginemp():
+    root3 = Tk()
+    root3.overrideredirect(True)
+    root3.geometry("{0}x{1}+0+0".format(root3.winfo_screenwidth(), root3.winfo_screenheight()))
+    root3.title("Store Name")
+    #-------------------------------------------------------------------------------------------------------------------------------------------
+    Titlecard = Frame(root3, width = 1280, height = 100, bd = 7, bg = 'dodgerblue', relief = GROOVE)
+    Titlecard.pack(side = 'top', anchor = CENTER, fill = X)
+    rt = time.strftime("%d/%m/%y")
+    body  = Frame(root3, width = 1280, height = 600, bd = 9, bg = 'dodgerblue3', relief = FLAT)
+    body.pack(side = 'top',fill = BOTH)
+    login = Frame(body, width = 600, height = 600, bd = 7, bg = 'Steelblue2', relief = RAISED)
+    login.pack(side = TOP, anchor = CENTER, fill = Y, ipady = 100,ipadx = 10) 
+    #-------------------------------------------------------------------------------------------------------------------------------------------
+    Username = StringVar()
+    Password = StringVar()
+    Values1 = ['Username :','Password :']
+    Values = [Username, Password]
+    #-------------------------------------------------------------------------------------------------------------------------------------------
+    def clear():
+         for y in Values:
+              y.set("")
+    def exiit():
+         qexit = messagebox.askyesno("SHOP NAME","DO YOU WISH TO EXIT")
+         if qexit > 0:
+              root3.destroy()
+    def signup():
+         root3.destroy()
+         emplyrentry()
+    def logn():
+         Username2 = str(Username.get())
+         Password2 = str(Password.get())
+         try:
+             empen = db.Emplyrrentry.find_one({"name":Username2})
+             if empen == None:
+                 messagebox.showerror("SHOP NAME", "Incorrect Entry")
+             else:
+                 log1 = str(empen['name'])
+                 global log
+                 log = log1
+                 if len(Username.get()) == 0 or len(Password.get()) == 0:
+                      messagebox.showerror("SHOP NAME", "Incorrect Entry")
+                 elif Username2 != str(empen['name']) or Password2 != str(empen['Password']):
+                      messagebox.showerror("SHOP NAME", "Incorrect Entry")
+                 elif str(empen['name'])  == None or str(empen['Password']) == None:
+                      messagebox.showerror("SHOP NAME", "Incorrect Entry")
+                 elif str(empen['name']) == Username2 and str(empen['Password']) == Password2:
+                      root3.destroy()
+                      selectionscreen()
+                 else:
+                      messagebox.showerror("Customer Details", "Incorrect Entry")
+         except:
+             pass
+    #-------------------------------------------------------------------------------------------------------------------------------------------
+    date1 = Label(Titlecard, text = "DATE:" + rt,relief = GROOVE, width = 17, bd  = 7,bg = 'white', fg = 'black',font = ('arial', 15, 'italic'))
+    date1.pack(side = RIGHT, anchor = NW, pady = 15)
+
+    Title = Label(Titlecard, text = "SHOP NAME", relief = GROOVE, width = 15 , bd = 7, bg = 'dodgerblue4',
+                  fg = 'lightSkyblue2', font = ('arial', 20, 'italic'))
+    Title.pack(side = LEFT,pady = 15, ipadx = 35, padx =45)
+
+    logintitle = Label(login, text = "LOGIN", relief = FLAT, width = 10 , bd = 6, bg = 'Steelblue2',
+                       fg = 'Steelblue', font = ('arial', 20, 'italic'))
+    logintitle.grid(row = 0, column = 0, columnspan = 3)
+    r = 1
+    for t in Values1:
+         Label(login, text=t, relief=FLAT,width=10,padx = 10, pady = 10, bd = 6, fg = 'black',bg = 'Steelblue2',
+               font = ('arial', 15, 'bold')).grid(row=r,column=0)
+         r = r + 1
+    Entry(login, relief=SUNKEN,font = ('arial', 15, 'italic'), textvariable = Username,
+               bd = 9, insertwidth = 3).grid(row=1,column=1,pady = 20)
+    Entry(login, relief=SUNKEN,font = ('arial', 15, 'italic'), show ="*",textvariable = Password,
+               bd = 9, insertwidth = 3).grid(row=2,column=1,pady = 20)
+   #-------------------------------------------------------------------------------------------------------------------------------------------
+    btn1 = Button(login, text = "LOGIN",command = logn, relief = RAISED, width = 10 , bd = 6, bg = 'Steelblue2',
+                       fg = 'blue2', font = ('arial', 20, 'italic')).grid(row = 4, column = 0, columnspan = 3)
+    btn2 = Button(login, text = "CLEAR",command = clear, relief = RAISED, width = 10 , bd = 6, bg = 'Steelblue2',
+                       fg = 'blue2', font = ('arial', 20, 'italic')).grid(row = 5, column = 0, columnspan = 3)
+    btn3 = Button(login, text = "SIGNUP",command = signup, relief = RAISED, width = 10 , bd = 6, bg = 'Steelblue2',
+                       fg = 'blue2', font = ('arial', 20, 'italic')).grid(row = 7, column = 0, columnspan = 3)
+    btn4 = Button(login, text = "EXIT",command = exiit, relief = RAISED, width = 10 , bd = 6, bg = 'red',
+                       fg = 'black', font = ('arial', 20, 'italic')).grid(row = 8, column = 0, columnspan = 3)
+    #-------------------------------------------------------------------------------------------------------------------------------------------
+    root3.mainloop()
+
+def selectionscreen():
+    root2 = Tk()
+    root2.overrideredirect(True)
+    root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+    root2.title("Store Name")
+    #-------------------------------------------------------------------------------------------------------------------------------------------
+    Titlecard = Frame(root2, width = 1280, height = 100, bd = 7,bg = 'lightblue', relief = "flat")
+    Titlecard.pack(side = TOP,anchor = W ,fill = X)
+    Body = Frame(root2, width = 1280, height = 700, bd = 7, bg = 'white', relief = "sunken")
+    Body.pack(side = TOP, anchor = CENTER, fill = BOTH,ipady = 15)
+    Exit = Frame(Body, width = 400, height = 50, bd = 8, bg = 'white', relief =FLAT)
+    Exit.pack(side = BOTTOM, anchor = CENTER, fill = X)
+    Buttons = Frame(Body, width = 640, height = 300, bd = 8, bg = 'blue', relief = "groove")
+    Buttons.pack(side = BOTTOM,anchor =S,fill = Y,pady = 25)
+    #-------------------------------------------------------------------------------------------------------------------------------------------
+    MsgTitle = Label(Body, text = "Creating bills Since Big Bang!!", relief = RAISED, width = 15, padx = 16, pady = 16, bd = 7, fg = 'darkred', bg = 'red',font = ('arial', 15, 'italic'))
+    MsgTitle.pack(side = TOP, anchor = N, fill = X)
+    #-------------------------------------------------------------------------------------------------------------------------------------------
+    def Cust():
+        root2.destroy()
+        customerentry()
+    def Chngstcks():
+        root2.destroy()
+        stockmaintenance()
+    def createbills():
+        root2.destroy()
         createbill()
     def view():
         root2.destroy()
@@ -165,25 +291,25 @@ def emplyrentry():
          Phnumber1 = str(Phonenumber.get())
          Email1 = str(Email.get())
          if len(Username1) == 0:
-              messagebox.showerror("Customer Details", "Enter Name")
+              messagebox.showerror("Employer Details", "Enter Name")
          elif len(Password1) == 0:
-              messagebox.showerror("Customer Details", "Enter Password")
+              messagebox.showerror("Employer Details", "Enter Password")
          elif len(Address1) == 0:
-              messagebox.showerror("Customer Details", "Enter Location")
+              messagebox.showerror("Employer Details", "Enter Location")
          elif len(Phnumber1) != 10 :
-                messagebox.showerror("Customer Details", "Invalid  Phone Number")
+                messagebox.showerror("Employer Details", "Invalid  Phone Number")
          elif len(Email1) == 0:
-              messagebox.showerror("Customer Details", "Invalid Email ID") 
+              messagebox.showerror("Employer Details", "Invalid Email ID") 
          elif Username1.isalpha() == False:
-              messagebox.showerror("Customer Details", "Invalid Name")
+              messagebox.showerror("Employer Details", "Invalid Name")
          elif Address1.isalpha() == False:
-              messagebox.showerror("Customer Details", "Invalid Location")
+              messagebox.showerror("Employer Details", "Invalid Location")
          elif Phnumber1.isdigit() == False:
-             messagebox.showerror("Customer Details", "Invalid  Phone Number")
+             messagebox.showerror("Employer Details", "Invalid  Phone Number")
          elif '@' not in Email1 and '.com' not in Email1:
-              messagebox.showerror("Customer Details", "Invalid Email ID")
+              messagebox.showerror("Employer Details", "Invalid Email ID")
          elif Password1 != Re_enterPassword1:
-              messagebox.showerror("Customer Details", "Incorrect Password")
+              messagebox.showerror("Employer Details", "Incorrect Password")
          else:
               unm = Username1
               pswd =  Password1
@@ -191,6 +317,7 @@ def emplyrentry():
               Ph =  Phnumber1
               Em = Email1
               db.Emplyrrentry.insert_one({"name":unm,"Password":pswd,"Address":Ads,"phonenum":Ph,"Email":Em})
+              messagebox.showinfo("Employer Details", "Employer entry created")
     def clear():
          for j in Values:
               j.set("")
@@ -282,8 +409,10 @@ def customerentry():
                     messagebox.showerror("Shop Name", "Existing Field")
                 else:
                     db.Customerentry.insert_one({"name":nm,"ID":Id,"Address":Ad,"phonenum":Ph,"Email":Em})
+                    messagebox.showinfo("Customer Details", "Customer entry created")
             except:
                 db.Customerentry.insert_one({"name":nm,"ID":Id,"Address":Ad,"phonenum":Ph,"Email":Em})
+                messagebox.showinfo("Customer Details", "Customer entry created")
     def View():
         nm = str(Name.get())
         DET = db.Customerentry.find_one({"name":nm})
@@ -688,6 +817,7 @@ def createbill():
                 else:
                     db.Bill.insert_one({"id":randomm,"Cust name":Cusname,"Cust phnum":phncus
                                 ,"Item name":itemnm, "Item quantity":itmqty,"Cost price":itmcp})
+                    messagebox.showinfo("Bill Details", "Bill entry created")
                     db.Stockmain.update_one({"ItemName":itemnm},{"$set":{"TotalItems":itmupd}})                
         except:
             if len(randomm) == 0 or len(str(itemnm)) == 0 or len(str(itmqty)) == 0  or len(str(itmcp)) == 0:
@@ -699,6 +829,7 @@ def createbill():
                 else:
                     db.Bill.insert_one({"id":randomm,"Cust name":Cusname,"Cust phnum":phncus
                                 ,"Item name":itemnm, "Item quantity":itmqty,"Cost price":itmcp})
+                    messagebox.showinfo("Bill Details", "Bill entry created")
                     db.Stockmain.update_one({"ItemName":itemnm},{"$set":{"TotalItems":itmupd}})        
         global total1,cost1
         try:
@@ -778,6 +909,7 @@ def createbill():
         global Billno
         Billno = randomm1
         db.GBill.insert_one({"id":randomm1,"Amount of items":Billc,"Total price":TP})
+        messagebox.showinfo("Bill Details", "Bill  created")
         root6.destroy()
         Cbill()        
 
@@ -894,8 +1026,10 @@ def stockmaintenance():
                       messagebox.showerror("Shop Name", "Existing Field")
                   else:
                       db.Stockmain.insert_one({"ItemName":ItemName1,"Size":Size1,"TotalItems":TotalItems1,"Costperitem":Costperitem1,"discountperitem":discountperitem1})
+                      messagebox.showinfo("Stock Details", "Stock entry created")
               except:
                   db.Stockmain.insert_one({"ItemName":ItemName1,"Size":Size1,"TotalItems":TotalItems1,"Costperitem":Costperitem1,"discountperitem":discountperitem1})
+                  messagebox.showinfo("Stock Details", "Stock entry created")
 
 
 
@@ -1002,3 +1136,4 @@ def stockmaintenance():
     root5.mainloop()
 ##    stockmaintenance()
 loginemp()
+
